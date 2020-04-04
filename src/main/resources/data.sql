@@ -1,4 +1,5 @@
-insert into user values (1, 'teomandi');
-insert into user values (2, 'geomandi');
-insert into user values (3, 'paropaido');
-insert into user values (4, 'choudras');
+insert into user (id, username, role, IS_HOST) values(1, 'teomandi', 1, false);
+insert into user (id, username, role, IS_HOST) values(2, 't2eomandi', 1, false);
+insert into user (id, username, role, IS_HOST) values(3, 't3eomandi', 1, false);
+insert into place (id, name, user_id) values (1, 'placeeee', 1);
+

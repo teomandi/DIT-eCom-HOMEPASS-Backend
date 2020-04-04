@@ -1,6 +1,7 @@
 package com.exercise.mybnb;
 
 import com.exercise.mybnb.model.User;
+import com.exercise.mybnb.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,35 +12,34 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    UserRepo repo;
+    UserRepo userRepo;
 
     @GetMapping("/user")
     public List<User> getUsers(){
-        return repo.findAll();
+        return userRepo.findAll();
     }
 
     @GetMapping("/user/{id}")
     public Optional<User> getUser(@PathVariable("id") int uid){
-        return repo.findById(uid);
+        return userRepo.findById(uid);
     }
 
     @PostMapping("/user")
     public User addUser(User u){
-        System.out.println("Adding user " + u.getUsername());
-        repo.save(u);
+        userRepo.save(u);
         return u;
     }
 
     @PutMapping("/user")
     public User updateUser(User u){
-        repo.save(u);
+        userRepo.save(u);
         return u;
     }
 
     @DeleteMapping("/user/{id}")
     public String deleteUser(@PathVariable("id") int uid){
-        User u = repo.getOne(uid);
-        repo.delete(u);;
-        return "Deleted";
+        User u = userRepo.getOne(uid);
+        userRepo.delete(u);;
+        return "{ 'message' : 'user deleted with success'}";
     }
 }
