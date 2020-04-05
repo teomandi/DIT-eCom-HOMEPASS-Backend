@@ -1,32 +1,55 @@
 package com.exercise.mybnb.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name="users")
+public class User extends AuditModel{
     @Id
     @GeneratedValue
     private int id;
-    @Column(name = "username")
+    @Column(name="username", unique=true, nullable=false)
     private String username;
-    @Column(name = "created_at")
-    private Date createdAt;
-    @Column(name = "role")
+    @Column(name="password")
+    private String password;
+    @Column(name="email")
+    private String email;
+    @Column(name="first_name")
+    private String firstName;
+    @Column(name="last_name")
+    private String lastName;
+    @Column(name="phone")
+    private String phone;
+    @Column(name="role")
     private int role = 1;
-    @Column(name = "is_host")
-    private boolean isHost = true;
-
-    @OneToMany(mappedBy = "user")
-    @JsonBackReference
-    private Set<Place> places;
+    @Column(name="is_host")
+    private boolean isHost = false;
+    @Column(name="image_name")
+    private String imageName = "default_user.jpg";
 
     public User(){}
     public User(String username){
         this.username = username;
+    }
+    public User(String username, String password, String email, String firstName, String lastName, String phone, String imageName) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.imageName = imageName;
     }
 
     public int getId() {
@@ -45,14 +68,10 @@ public class User {
         this.username = username;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    @PrePersist
-    public void setCreatedAt() {
-        this.createdAt = new Date();
-    }
+//    @PrePersist
+//    public void setCreatedAt() {
+//        this.createdAt = new Date();
+//    }
 
     public int getRole() {
         return role;
@@ -70,15 +89,51 @@ public class User {
         isHost = host;
     }
 
-    public Set<Place> getPlaces() {
-        return places;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPlaces(Set<Place> places) {
-        this.places = places;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void addPlace(Place place) {
-        this.places.add(place);
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }
