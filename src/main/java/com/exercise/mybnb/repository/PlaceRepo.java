@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PlaceRepo extends JpaRepository<Place, Integer> {
 
-    Page<Place> findByUserId(int uid, Pageable pageable);
-    Optional<Place> findByIdAndUserId(int pid, int uid);
+    Page<Place> findByOwnerId(int uid, Pageable pageable);
+    Optional<Place> findByIdAndOwnerId(int pid, int uid);
 
 }

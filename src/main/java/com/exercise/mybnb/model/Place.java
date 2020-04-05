@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name="places")
 public class Place extends AuditModel{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name="name")
     private String name = null;

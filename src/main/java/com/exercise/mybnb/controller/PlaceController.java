@@ -36,7 +36,7 @@ public class PlaceController {
 
     @GetMapping("/user/{uid}/place")
     public Page<Place> getAllPlacesByUserId(@PathVariable("uid") int uid, Pageable pageable){
-        return placeRepo.findByUserId(uid, pageable);
+        return placeRepo.findByOwnerId(uid, pageable);
     }
 
 
@@ -72,7 +72,7 @@ public class PlaceController {
     @DeleteMapping("/user/{uid}/place/{pid}")
     public ResponseEntity<?> deletePlace(@PathVariable("uid") int uid,
                               @PathVariable("pid") int pid){
-        return placeRepo.findByIdAndUserId(pid, uid).map(place -> {
+        return placeRepo.findByIdAndOwnerId(pid, uid).map(place -> {
             placeRepo.delete(place);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id "

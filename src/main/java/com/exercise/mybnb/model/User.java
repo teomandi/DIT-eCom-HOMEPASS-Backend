@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name="users")
 public class User extends AuditModel{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name="username", unique=true, nullable=false)
     private String username;

@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public String createUser(@Valid @RequestBody  MultiUser mu){
+    public String createUser(MultiUser mu){
         User u = mu.getUser();
         boolean exist = userRepo.existsUserByUsername(u.getUsername());
 
