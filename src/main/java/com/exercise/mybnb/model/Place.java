@@ -5,8 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name="places")
@@ -24,16 +22,12 @@ public class Place extends AuditModel{
     private String address;
     @Column(name="anumber")
     private String aNumber;
-
     @Column(name="zip_code")
     private String zipCode;
     @Column(name="description")
     private String description;
 
-//    @ElementCollection
-//    private List<String> rules;
-//    @ElementCollection
-//    private List<String> images;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

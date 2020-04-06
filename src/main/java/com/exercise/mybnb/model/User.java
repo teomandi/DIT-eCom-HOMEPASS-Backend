@@ -38,19 +38,6 @@ public class User extends AuditModel{
     @Column(name="image_name")
     private String imageName = "default_user.jpg";
 
-    public User(){}
-    public User(String username){
-        this.username = username;
-    }
-    public User(String username, String password, String email, String firstName, String lastName, String phone, String imageName) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.imageName = imageName;
-    }
 
     public int getId() {
         return id;

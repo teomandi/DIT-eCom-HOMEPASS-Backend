@@ -1,6 +1,5 @@
 package com.exercise.mybnb.controller;
 
-import com.exercise.mybnb.MultiPlace;
 import com.exercise.mybnb.model.Place;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.repository.UserRepo;
@@ -41,7 +40,7 @@ public class PlaceController {
 
 
     @PostMapping("/user/{uid}/place")
-    public Place createPlace(@PathVariable("uid") int uid, @Valid@RequestBody Place place)
+    public Place createPlace(@PathVariable("uid") int uid, @Valid Place place)
     {
         return userRepo.findById(uid).map(user -> {
             place.setOwner(user);
