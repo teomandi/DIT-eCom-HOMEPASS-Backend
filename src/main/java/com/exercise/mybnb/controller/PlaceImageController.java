@@ -40,21 +40,25 @@ public class PlaceImageController {
     }
 
     @PostMapping("/place/{pid}/image")
-    public PlaceImage createImage(@PathVariable("pid") int pid,
-                                  @Valid PlaceImage image,
-                                  MultipartFile file) {
-        if(file == null)
+    public ResponseEntity<?> createImage(@PathVariable("pid") int pid,
+                                         MultipartFile[] files) {
+        if (files == null)
             throw new ResourceNotFoundException("Image file not found");
         return placeRepo.findById(pid).map(place -> {
-            image.setPlace(place);
-            image.setFilename(file.getOriginalFilename());
             Utils.makeDir(pid);
-            try {
-                Utils.storeImage("places/" + pid + "/" + file.getOriginalFilename(), file.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
+            for (MultipartFile file : files) {
+                PlaceImage image = new PlaceImage();
+                image.setFilename(file.getOriginalFilename());
+                image.setPlace(place);
+                imageRepo.save(image);
+                //store the image
+                try {
+                    Utils.storeImage("places/" + pid + "/" + file.getOriginalFilename(), file.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            return imageRepo.save(image);
+            return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + " not found"));
     }
 
