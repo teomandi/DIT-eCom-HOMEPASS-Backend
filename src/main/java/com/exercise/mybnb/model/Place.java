@@ -26,8 +26,14 @@ public class Place extends AuditModel{
     private String zipCode;
     @Column(name="description")
     private String description;
-
-
+    @Column(name="cost_per_day")
+    private float costPerDay;
+    @Column(name="cost_per_person")
+    private float costPerPerson;
+    @Column(name="rating")
+    private float rating;
+    @Column(name="main_image")
+    private String mainImage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -103,5 +109,37 @@ public class Place extends AuditModel{
 
     public void setaNumber(String aNumber) {
         this.aNumber = aNumber;
+    }
+
+    public float getCostPerDay() {
+        return costPerDay;
+    }
+
+    public void setCostPerDay(float costPerDay) {
+        this.costPerDay = costPerDay;
+    }
+
+    public float getCostPerPerson() {
+        return costPerPerson;
+    }
+
+    public void setCostPerPerson(float costPerPerson) {
+        this.costPerPerson = costPerPerson;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
     }
 }

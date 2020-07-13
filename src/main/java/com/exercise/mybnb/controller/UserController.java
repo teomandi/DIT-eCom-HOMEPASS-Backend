@@ -25,17 +25,17 @@ public class UserController {
     @Autowired
     UserRepo userRepo;
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public Page<User> getAllUsers(Pageable pageable){
         return userRepo.findAll(pageable);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public Optional<User> getUser(@PathVariable("id") int uid){
         return userRepo.findById(uid);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public User createUser(User u, MultipartFile imageFile) throws IOException {
         boolean exist = userRepo.existsUserByUsername(u.getUsername());
         if(exist)
@@ -48,7 +48,7 @@ public class UserController {
         return userRepo.save(u);
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/users/{id}")
     public User updateUser(@PathVariable int id, @Valid User u, MultipartFile imageFile){
         return userRepo.findById(id).map(user -> {
             user.setUsername(u.getUsername());
@@ -70,7 +70,7 @@ public class UserController {
         }).orElseThrow(() -> new ResourceNotFoundException("UserID " + id + " not found"));
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") int id){
         return userRepo.findById(id).map(user -> {
             userRepo.delete(user);

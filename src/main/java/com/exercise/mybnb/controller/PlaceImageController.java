@@ -9,12 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,22 +28,22 @@ public class PlaceImageController {
     @Autowired
     PlaceRepo placeRepo;
 
-    @GetMapping("/image")
+    @GetMapping("/images")
     public List<PlaceImage> getAllImages() {
         return imageRepo.findAll();
     }
 
-    @GetMapping("/image/{id}")
+    @GetMapping("/images/{id}")
     public Optional<PlaceImage> getImage(@PathVariable("id") int id) {
         return imageRepo.findById(id);
     }
 
-    @GetMapping("/place/{pid}/image")
+    @GetMapping("/places/{pid}/images")
     public Page<PlaceImage> getAllImagesByPlaceId(@PathVariable("pid") int pid, Pageable pageable) {
         return imageRepo.findByPlaceId(pid, pageable);
     }
 
-    @PostMapping("/place/{pid}/image")
+    @PostMapping("/places/{pid}/images")
     public ResponseEntity<?> createImage(@PathVariable("pid") int pid,
                                          MultipartFile[] files) {
         if (files == null)
@@ -64,7 +68,7 @@ public class PlaceImageController {
 
     //PUT????
 
-    @DeleteMapping("/place/{pid}/image/{id}")
+    @DeleteMapping("/places/{pid}/images/{id}")
     public ResponseEntity<?> deleteImage(@PathVariable("pid") int pid,
                                          @PathVariable("id") int id) {
         return imageRepo.findByIdAndPlaceId(id, pid).map(image -> {
@@ -74,6 +78,20 @@ public class PlaceImageController {
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Image not found with id "
                 + id + " and PlaceID " + pid));
+    }
+
+    @PostMapping("/random")
+    public Map<String, String> randomRequest(@RequestParam MultiValueMap<String, String> data){
+        System.out.println(data.get("key1").toString());
+        System.out.println(data.get("key2"));
+        System.out.println(data.get("key3"));
+
+        Map<String, String> resp = new HashMap<String, String>();
+        resp.put("KEY1", String.valueOf(data.get("key1")).toUpperCase());
+        resp.put("KEY2", String.valueOf(data.get("key2")).toUpperCase());
+        resp.put("KEY3", String.valueOf(data.get("key3")).toUpperCase());
+
+        return resp;
     }
 
 }

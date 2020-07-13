@@ -55,11 +55,6 @@ public class User extends AuditModel{
         this.username = username;
     }
 
-//    @PrePersist
-//    public void setCreatedAt() {
-//        this.createdAt = new Date();
-//    }
-
     public int getRole() {
         return role;
     }
