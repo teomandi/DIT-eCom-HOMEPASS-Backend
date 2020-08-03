@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCrypt; // <-----
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,8 @@ public class UserController {
 
     @Autowired
     UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
     public Page<User> getAllUsers(Pageable pageable){
@@ -45,6 +48,10 @@ public class UserController {
             u.setImageName(imageName);
             Utils.storeImage("users/"+imageName, imageFile.getBytes());
         }
+        System.out.println("Before " + u.getPassword());
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
+        System.out.println("After " + u.getPassword());
+
         return userRepo.save(u);
     }
 

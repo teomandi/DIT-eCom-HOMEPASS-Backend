@@ -11,17 +11,20 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.exercise.mybnb.security.SecurityConstants.*;
+import static com.exercise.mybnb.security.SecurityConstants.HEADER_STRING;
+import static com.exercise.mybnb.security.SecurityConstants.TOKEN_PREFIX;
+import static com.exercise.mybnb.security.SecurityConstants.SECRET;
 
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
     public JWTAuthorizationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
