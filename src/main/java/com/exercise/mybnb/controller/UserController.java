@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(User u, MultipartFile imageFile) throws IOException {
+    public User createUser(User u, @RequestParam("picture") MultipartFile imageFile) throws IOException {
         boolean exist = userRepo.existsUserByUsername(u.getUsername());
         if(exist)
             throw new ResourceAlreadyExistException("User already exists");
@@ -48,10 +48,11 @@ public class UserController {
             u.setImageName(imageName);
             Utils.storeImage("users/"+imageName, imageFile.getBytes());
         }
+        else
+            System.out.println("ImageFile is null");
         System.out.println("Before " + u.getPassword());
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         System.out.println("After " + u.getPassword());
-
         return userRepo.save(u);
     }
 
@@ -59,7 +60,7 @@ public class UserController {
     public User updateUser(@PathVariable int id, @Valid User u, MultipartFile imageFile){
         return userRepo.findById(id).map(user -> {
             user.setUsername(u.getUsername());
-            user.setPassword(u.getPassword());
+            user.setPassword(u.getPassword()); //no
             user.setEmail(u.getEmail());
             user.setFirstName(u.getFirstName());
             user.setLastName(u.getLastName());

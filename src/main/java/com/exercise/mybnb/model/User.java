@@ -31,8 +31,8 @@ public class User extends AuditModel{
     private String lastName;
     @Column(name="phone")
     private String phone;
-    @Column(name="role")
-    private int role = 1;
+//    @Column(name="role")
+//    private int role = 1;
     @Column(name="is_host")
     private boolean isHost = false;
     @Column(name="image_name")
@@ -55,13 +55,13 @@ public class User extends AuditModel{
         this.username = username;
     }
 
-    public int getRole() {
-        return role;
-    }
-
-    public void setRole(int role) {
-        this.role = role;
-    }
+//    public int getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(int role) {
+//        this.role = role;
+//    }
 
     public boolean isHost() {
         return isHost;
