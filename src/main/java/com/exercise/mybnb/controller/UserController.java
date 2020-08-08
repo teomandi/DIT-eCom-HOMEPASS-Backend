@@ -8,11 +8,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCrypt; // <-----
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +38,21 @@ public class UserController {
     @GetMapping("/users/{id}")
     public Optional<User> getUser(@PathVariable("id") int uid){
         return userRepo.findById(uid);
+    }
+
+    @GetMapping("/users/{username}/username")
+    public User getUserByUsername(@PathVariable("username") String username){
+        return  userRepo.findByUsername(username);
+    }
+
+    @GetMapping("/users/{id}/image")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable("id") int uid) throws IOException {
+        Optional<User> u = userRepo.findById(uid);
+        System.out.println("image for User: " + u.get().getUsername());
+        byte[] image = u.get().getUserImageBytes();
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
     }
 
     @PostMapping("/users")

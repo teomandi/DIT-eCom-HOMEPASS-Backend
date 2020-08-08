@@ -10,6 +10,10 @@ public class Utils {
     // no slash "/" is given
     private static String mainPath = "/home/teomandi/bnb_app_photos/";
 
+    public static String getMainPath(){
+        return mainPath;
+    }
+
     public static void storeImage(String filename, byte[] content) throws IOException {
         Path path = Paths.get(mainPath + filename);
         Files.write(path, content);

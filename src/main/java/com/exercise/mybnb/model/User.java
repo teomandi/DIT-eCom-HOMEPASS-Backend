@@ -1,16 +1,13 @@
 package com.exercise.mybnb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.exercise.mybnb.utils.Utils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 @Entity
@@ -37,7 +34,23 @@ public class User extends AuditModel{
     private boolean isHost = false;
     @Column(name="image_name")
     private String imageName = "default_user.jpg";
+    @Column(name="address")
+    private String address;
 
+    public byte[] getUserImageBytes() throws IOException {
+        String mainPath = Utils.getMainPath();
+        String imagePath = null;
+        if(imageName.equals("default_user.jpg"))
+            imagePath = mainPath + imageName;
+        else
+            imagePath = mainPath + "users/" + imageName;
+
+        System.out.println("User: " + username + " image-path: " + imagePath);
+        File fimg = new File(imagePath);
+        return FileUtils.readFileToByteArray(fimg);
+//        InputStream in = getClass().getResourceAsStream(imagePath);
+//        return IOUtils.toByteArray(in);
+    }
 
     public int getId() {
         return id;
@@ -117,5 +130,13 @@ public class User extends AuditModel{
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
