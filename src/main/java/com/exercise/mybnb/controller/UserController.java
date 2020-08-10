@@ -69,9 +69,12 @@ public class UserController {
     @PostMapping("/users")
     public User createUser(User u, @RequestParam("picture") MultipartFile imageFile) throws IOException {
         boolean exist = userRepo.existsUserByUsername(u.getUsername());
-        if(exist)
+        if(exist){
+            System.out.println("Username already in use");
             throw new ResourceAlreadyExistException("User already exists");
-        if(imageFile != null) {
+        }
+        System.out.println("image file:: " + imageFile.isEmpty());
+        if(!imageFile.isEmpty()) {
             String imageName = u.getUsername() + "." + FilenameUtils.getExtension(imageFile.getOriginalFilename());
             u.setImageName(imageName);
             Utils.storeImage("users/"+imageName, imageFile.getBytes());
@@ -105,7 +108,7 @@ public class UserController {
             user.setAddress(u.getAddress());
             user.setHost(user.isHost());
             user.setPassword(user.getPassword());
-            if(imageFile != null) {
+            if(!imageFile.isEmpty()) {
                 System.out.println("Storing new image for user");
                 String imageName = u.getUsername() + "." + FilenameUtils.getExtension(imageFile.getOriginalFilename());
                 user.setImageName(imageName);
@@ -116,7 +119,7 @@ public class UserController {
                 }
             }
             else{
-                user.setImageName(user.getImageName());
+                user.setImageName(user.getImageName()); //keep the same
                 System.out.println("NO new image found, keeping the same");
             }
             return userRepo.save(user);
