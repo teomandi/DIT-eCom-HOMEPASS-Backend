@@ -12,134 +12,42 @@ public class Place extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="name")
-    private String name = null;
-    @Column(name="country")
-    private String country;
-    @Column(name="city")
-    private String city;
-    @Column(name="address")
-    private String address;
-    @Column(name="anumber")
-    private String aNumber;
-    @Column(name="zip_code")
-    private String zipCode;
-    @Column(name="description")
-    private String description;
-    @Column(name="cost_per_day")
-    private float costPerDay;
-    @Column(name="cost_per_person")
-    private float costPerPerson;
-    @Column(name="rating")
-    private float rating;
-    @Column(name="main_image")
-    private String mainImage;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User owner;
+    @Column(name="main_image")
+    private String mainImage;
+    @Column(name="address")
+    private String address;
+    @Column(name="latitude")
+    private String latitude;
+    @Column(name="longitude")
+    private String longitude;
+    @Column(name="max_guests")
+    private int maxGuests;
+    @Column(name="min_cost")
+    private int minCost;
+    @Column(name="cost_per_person")
+    private int costPerPerson;
+    @Column(name="type")
+    private int type;
+    @Column(name="description")
+    private String description;
+    @Column(name="beds")
+    private int beds;
+    @Column(name="baths")
+    private int baths;
+    @Column(name="bedrooms")
+    private int bedrooms;
+    @Column(name="living_room")
+    private boolean livingRoom;
+    @Column(name="area")
+    private int area;
 
-    public int getId() {
-        return id;
-    }
+    // availability, images, extras (rules||benefits)
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User u) { this.owner = u;  }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getaNumber() {
-        return aNumber;
-    }
-
-    public void setaNumber(String aNumber) {
-        this.aNumber = aNumber;
-    }
-
-    public float getCostPerDay() {
-        return costPerDay;
-    }
-
-    public void setCostPerDay(float costPerDay) {
-        this.costPerDay = costPerDay;
-    }
-
-    public float getCostPerPerson() {
-        return costPerPerson;
-    }
-
-    public void setCostPerPerson(float costPerPerson) {
-        this.costPerPerson = costPerPerson;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public String getMainImage() {
-        return mainImage;
-    }
-
-    public void setMainImage(String mainImage) {
-        this.mainImage = mainImage;
-    }
 }
