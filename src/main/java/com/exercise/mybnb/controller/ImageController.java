@@ -1,7 +1,7 @@
 package com.exercise.mybnb.controller;
 
-import com.exercise.mybnb.model.PlaceImage;
-import com.exercise.mybnb.repository.PlaceImageRepo;
+import com.exercise.mybnb.model.Image;
+import com.exercise.mybnb.repository.ImageRepo;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -22,24 +20,24 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class PlaceImageController {
+public class ImageController {
     @Autowired
-    PlaceImageRepo imageRepo;
+    ImageRepo imageRepo;
     @Autowired
     PlaceRepo placeRepo;
 
     @GetMapping("/images")
-    public List<PlaceImage> getAllImages() {
+    public List<Image> getAllImages() {
         return imageRepo.findAll();
     }
 
     @GetMapping("/images/{id}")
-    public Optional<PlaceImage> getImage(@PathVariable("id") int id) {
+    public Optional<Image> getImage(@PathVariable("id") int id) {
         return imageRepo.findById(id);
     }
 
     @GetMapping("/places/{pid}/images")
-    public Page<PlaceImage> getAllImagesByPlaceId(@PathVariable("pid") int pid, Pageable pageable) {
+    public Page<Image> getAllImagesByPlaceId(@PathVariable("pid") int pid, Pageable pageable) {
         return imageRepo.findByPlaceId(pid, pageable);
     }
 
@@ -51,7 +49,7 @@ public class PlaceImageController {
         return placeRepo.findById(pid).map(place -> {
             Utils.makeDir(pid);
             for (MultipartFile file : files) {
-                PlaceImage image = new PlaceImage();
+                Image image = new Image();
                 image.setFilename(file.getOriginalFilename());
                 image.setPlace(place);
                 imageRepo.save(image);

@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="places")
@@ -45,6 +46,17 @@ public class Place extends AuditModel{
     private boolean livingRoom;
     @Column(name="area")
     private int area;
+
+    @OneToMany(mappedBy = "places")
+    private Set<Availability> availabilities;
+    @OneToMany(mappedBy = "places")
+    private Set<Benefits> benefits;
+    @OneToMany(mappedBy = "places")
+    private Set<Rules> rules;
+    @OneToMany(mappedBy = "places")
+    private Set<Rules> rules;
+    @OneToMany(mappedBy = "places")
+    private Set<Image> images;
 
     // availability, images, extras (rules||benefits)
 

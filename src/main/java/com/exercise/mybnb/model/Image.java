@@ -8,12 +8,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="places_images")
-public class PlaceImage extends AuditModel {
+public class Image extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name="filename")
     private String filename;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "place_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
