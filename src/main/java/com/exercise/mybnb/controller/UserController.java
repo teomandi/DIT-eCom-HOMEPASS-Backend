@@ -1,6 +1,7 @@
 package com.exercise.mybnb.controller;
 
 import com.exercise.mybnb.exception.ResourceAlreadyExistException;
+import com.exercise.mybnb.model.Place;
 import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.response.CustomResponse;
@@ -41,6 +42,7 @@ public class UserController {
     public Optional<User> getUser(@PathVariable("id") int uid){
         return userRepo.findById(uid);
     }
+
 
     @GetMapping("/users/{username}/username")
     public User getUserByUsername(@PathVariable("username") String username){

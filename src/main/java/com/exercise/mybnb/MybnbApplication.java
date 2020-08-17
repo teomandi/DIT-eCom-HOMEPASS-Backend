@@ -1,5 +1,6 @@
 package com.exercise.mybnb;
 
+import com.exercise.mybnb.utils.Utils;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -13,6 +14,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 @SpringBootApplication
@@ -29,8 +32,19 @@ public class MybnbApplication {
     @Bean
     public void initApp(){
         System.out.println("Is this executed?");
-        String filePath = new File("").getAbsolutePath();
-        System.out.println("Absolute path: " + filePath);
+        String absPath = new File("").getAbsolutePath();
+        System.out.println("Absolute path: " + absPath);
+        String storage = absPath + "/storage/";
+        if(Files.notExists(Paths.get(storage)))
+            new File(storage).mkdir();
+        String usersDir = storage + "users";
+        String placesDir = storage + "places";
+        if(Files.notExists(Paths.get(usersDir)))
+            new File(usersDir).mkdir();
+        if(Files.notExists(Paths.get(placesDir)))
+            new File(placesDir).mkdir();
+        Utils.setMainPath(storage);
+        System.out.println("MainPath set to: " + Utils.getMainPath());
     }
 
     @Bean

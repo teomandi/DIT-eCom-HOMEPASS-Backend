@@ -1,17 +1,15 @@
 package com.exercise.mybnb.controller;
 
 import com.exercise.mybnb.model.Place;
+import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.utils.Utils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -35,33 +33,41 @@ public class PlaceController {
 //        return placeRepo.findAll(pageable);
 //    }
 
-
     @GetMapping("/places/{pid}")
     public Optional<Place> getPlace(@PathVariable("pid") int pid) {
         return placeRepo.findById(pid);
     }
 
     @GetMapping("/users/{uid}/places")
-    public Page<Place> getAllPlacesByUserId(@PathVariable("uid") int uid, Pageable pageable){
-        return placeRepo.findByOwnerId(uid, pageable);
+    public Place getPlaceByUserId(@PathVariable("uid") int uid){
+        System.out.println("loooking for user with id : " + uid);
+        //return placeRepo.findById(uid);
+        return userRepo.findById(uid).map(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + uid));
     }
-
 
     @PostMapping("/users/{uid}/places")
     public Place createPlace(@PathVariable("uid") int uid, @Valid Place place, @RequestParam("image") MultipartFile imageFile )
     {
+        System.out.println("Storing new place " + uid);
         return userRepo.findById(uid).map(user -> {
-            place.setOwner(user);
+            System.out.println("Owner user found: " + user.getUsername());
+            //check if he already have
             place.setMainImage(imageFile.getOriginalFilename());
-            if(imageFile != null) {
+            Place p = placeRepo.save(place);
+            user.setPlace(place);
+            userRepo.save(user);
+
+            String gallery = p.createGallery();
+            if(!imageFile.isEmpty()) {
                 try {
+                    System.out.println("Storing main image at: " + gallery + imageFile.getOriginalFilename());
                     //main images are not store in the folder
-                    Utils.storeImage("places/" + imageFile.getOriginalFilename(), imageFile.getBytes());
+                    Utils.storeImageInGallery(gallery + imageFile.getOriginalFilename(), imageFile.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            return placeRepo.save(place);
+            return p;
         }).orElseThrow(() -> new ResourceNotFoundException("UserID " + uid + " not found")) ;
     }
 //
@@ -88,7 +94,7 @@ public class PlaceController {
     @DeleteMapping("/users/{uid}/places/{pid}")
     public ResponseEntity<?> deletePlace(@PathVariable("uid") int uid,
                               @PathVariable("pid") int pid){
-        return placeRepo.findByIdAndOwnerId(pid, uid).map(place -> {
+        return placeRepo.findByIdAndUserId(pid, uid).map(place -> {
             placeRepo.delete(place);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id "

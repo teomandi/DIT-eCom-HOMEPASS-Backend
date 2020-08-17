@@ -1,6 +1,7 @@
 package com.exercise.mybnb.model;
 
 import com.exercise.mybnb.utils.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -34,6 +35,18 @@ public class User extends AuditModel{
     private String imageName = "default_user.jpg";
     @Column(name="address")
     private String address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @JsonIgnore
+    private Place place;
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
 
     public int getId() {
         return id;

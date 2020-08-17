@@ -11,7 +11,11 @@ import java.nio.file.Paths;
 
 public class Utils {
     // no slash "/" is given
-    private static String mainPath = "/home/teomandi/bnb_app_photos/";
+    private static String mainPath;
+
+    public static void setMainPath(String mainPath) {
+        Utils.mainPath = mainPath;
+    }
 
     public static String getMainPath(){
         return mainPath;
@@ -21,6 +25,13 @@ public class Utils {
         Path path = Paths.get(mainPath + filename);
         Files.write(path, content);
         System.out.println("Image stored");
+    }
+
+    public static void storeImageInGallery(String fullPath, byte[] content) throws IOException {
+        System.out.println("Full path: " + fullPath);
+        Path path = Paths.get(fullPath);
+        Files.write(path, content);
+        System.out.println("Image stored in gallery");
     }
 
     public static byte[] getUserImageBytes(User u) throws IOException {

@@ -1,10 +1,14 @@
 package com.exercise.mybnb.model;
 
+import com.exercise.mybnb.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Set;
 
 @Entity
@@ -13,11 +17,10 @@ public class Place extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private User owner;
+
+    @OneToOne(mappedBy = "place")
+    private User user;
+
     @Column(name="main_image")
     private String mainImage;
     @Column(name="address")
@@ -33,7 +36,7 @@ public class Place extends AuditModel{
     @Column(name="cost_per_person")
     private int costPerPerson;
     @Column(name="type")
-    private int type;
+    private String type;
     @Column(name="description")
     private String description;
     @Column(name="beds")
@@ -46,7 +49,6 @@ public class Place extends AuditModel{
     private boolean livingRoom;
     @Column(name="area")
     private int area;
-
 
     @OneToMany(mappedBy = "place")
     private Set<Benefits> benefits;
@@ -66,12 +68,12 @@ public class Place extends AuditModel{
         this.id = id;
     }
 
-    public User getOwner() {
-        return owner;
+    public User getUser() {
+        return user;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getMainImage() {
@@ -130,11 +132,11 @@ public class Place extends AuditModel{
         this.costPerPerson = costPerPerson;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -216,5 +218,14 @@ public class Place extends AuditModel{
 
     public void setImages(Set<Image> images) {
         this.images = images;
+    }
+
+    public String createGallery(){
+        String dir = Utils.getMainPath() + "places/" + id + "/";
+        if(Files.notExists(Paths.get(dir))){
+            new File(dir).mkdir();
+            System.out.println("GalleryDir created: " + dir);
+        }
+        return dir;
     }
 }
