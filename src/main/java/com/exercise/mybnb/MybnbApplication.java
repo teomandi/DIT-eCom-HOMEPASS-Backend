@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.File;
+
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -22,6 +24,13 @@ public class MybnbApplication {
     }
     public static void main(String[] args) {
         SpringApplication.run(MybnbApplication.class, args);
+    }
+
+    @Bean
+    public void initApp(){
+        System.out.println("Is this executed?");
+        String filePath = new File("").getAbsolutePath();
+        System.out.println("Absolute path: " + filePath);
     }
 
     @Bean

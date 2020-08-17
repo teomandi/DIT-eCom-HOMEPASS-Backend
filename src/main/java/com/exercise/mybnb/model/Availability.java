@@ -12,10 +12,11 @@ public class Availability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="from")
+    @Column(name="av_from")
     private Date from;
-    @Column(name="to")
+    @Column(name="av_to")
     private Date to;
+
     @ManyToOne
     @JoinColumn(name="place_id", nullable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)

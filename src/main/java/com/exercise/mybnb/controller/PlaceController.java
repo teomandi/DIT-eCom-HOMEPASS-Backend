@@ -64,26 +64,26 @@ public class PlaceController {
             return placeRepo.save(place);
         }).orElseThrow(() -> new ResourceNotFoundException("UserID " + uid + " not found")) ;
     }
-
-    @PutMapping("/users/{uid}/places/{pid}")
-    public Place updatePlace(@PathVariable("uid") int uid,
-                             @PathVariable("pid") int pid,
-                             @Valid @RequestBody Place p){
-        if(!userRepo.existsById(uid))
-            throw new ResourceNotFoundException("UserID " + uid + " not found");
-
-        return placeRepo.findById(pid).map(place -> {
-            place.setName(p.getName());
-
-            place.setCountry(p.getCountry());
-            place.setAddress(p.getCity());
-            place.setAddress(p.getAddress());
-            place.setaNumber(p.getaNumber());
-            place.setZipCode(p.getZipCode());
-            place.setDescription(p.getDescription());
-            return placeRepo.save(place);
-        }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + "not found"));
-    }
+//
+//    @PutMapping("/users/{uid}/places/{pid}")
+//    public Place updatePlace(@PathVariable("uid") int uid,
+//                             @PathVariable("pid") int pid,
+//                             @Valid @RequestBody Place p){
+//        if(!userRepo.existsById(uid))
+//            throw new ResourceNotFoundException("UserID " + uid + " not found");
+//
+//        return placeRepo.findById(pid).map(place -> {
+//            place.setName(p.getName());
+//
+//            place.setCountry(p.getCountry());
+//            place.setAddress(p.getCity());
+//            place.setAddress(p.getAddress());
+//            place.setaNumber(p.getaNumber());
+//            place.setZipCode(p.getZipCode());
+//            place.setDescription(p.getDescription());
+//            return placeRepo.save(place);
+//        }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + "not found"));
+//    }
 
     @DeleteMapping("/users/{uid}/places/{pid}")
     public ResponseEntity<?> deletePlace(@PathVariable("uid") int uid,
