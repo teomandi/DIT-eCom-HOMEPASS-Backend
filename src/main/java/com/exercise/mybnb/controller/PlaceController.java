@@ -1,5 +1,6 @@
 package com.exercise.mybnb.controller;
 
+import com.exercise.mybnb.exception.ActionNotAllowedException;
 import com.exercise.mybnb.model.Place;
 import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.PlaceRepo;
@@ -42,21 +43,27 @@ public class PlaceController {
     public Place getPlaceByUserId(@PathVariable("uid") int uid){
         System.out.println("loooking for user with id : " + uid);
         //return placeRepo.findById(uid);
-        return userRepo.findById(uid).map(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + uid));
+        return userRepo.findById(uid).map(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User Or Place not found"));
     }
 
     @PostMapping("/users/{uid}/places")
-    public Place createPlace(@PathVariable("uid") int uid, @Valid Place place, @RequestParam("image") MultipartFile imageFile )
+    public Place createPlace(@PathVariable("uid") int uid,
+                             @Valid Place place,
+                             @RequestParam("image") MultipartFile imageFile )
     {
         System.out.println("Storing new place " + uid);
         return userRepo.findById(uid).map(user -> {
             System.out.println("Owner user found: " + user.getUsername());
+            System.out.println("Owner user found: " + user.getPlace());
             //check if he already have
+            if( user.getPlace() != null){
+                System.out.println("User already have a place");
+                throw  new ActionNotAllowedException("User already have a place");
+            }
             place.setMainImage(imageFile.getOriginalFilename());
             Place p = placeRepo.save(place);
             user.setPlace(place);
             userRepo.save(user);
-
             String gallery = p.createGallery();
             if(!imageFile.isEmpty()) {
                 try {
@@ -70,45 +77,68 @@ public class PlaceController {
             return p;
         }).orElseThrow(() -> new ResourceNotFoundException("UserID " + uid + " not found")) ;
     }
-//
-//    @PutMapping("/users/{uid}/places/{pid}")
-//    public Place updatePlace(@PathVariable("uid") int uid,
-//                             @PathVariable("pid") int pid,
-//                             @Valid @RequestBody Place p){
-//        if(!userRepo.existsById(uid))
-//            throw new ResourceNotFoundException("UserID " + uid + " not found");
-//
-//        return placeRepo.findById(pid).map(place -> {
-//            place.setName(p.getName());
-//
-//            place.setCountry(p.getCountry());
-//            place.setAddress(p.getCity());
-//            place.setAddress(p.getAddress());
-//            place.setaNumber(p.getaNumber());
-//            place.setZipCode(p.getZipCode());
-//            place.setDescription(p.getDescription());
-//            return placeRepo.save(place);
-//        }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + "not found"));
-//    }
+
+    @PutMapping("/users/{uid}/places/{pid}")
+    public Place updatePlace(@PathVariable("uid") int uid,
+                             @PathVariable("pid") int pid,
+                             @Valid Place p,
+                             @RequestParam("image") MultipartFile imageFile){
+        validateUserNplace(uid, pid);
+        return placeRepo.findById(pid).map(place -> {
+            place.setAddress(p.getAddress());
+            place.setLatitude(p.getLatitude());
+            place.setLongitude(p.getLongitude());
+            place.setMaxGuests(p.getMaxGuests());
+            place.setMinCost(p.getMinCost());
+            place.setCostPerPerson(p.getCostPerPerson());
+            place.setType(p.getType());
+            place.setDescription(p.getDescription());
+            place.setBeds(p.getBeds());
+            place.setBaths(p.getBaths());
+            place.setBedrooms(p.getBedrooms());
+            place.setLivingRoom(p.isLivingRoom());
+            place.setArea(p.getArea());
+            if(!imageFile.isEmpty()) {
+                try {
+                    place.setMainImage(imageFile.getOriginalFilename());
+                    String gallery = place.createGallery();
+                    System.out.println("Storing main image at: " + gallery + imageFile.getOriginalFilename());
+                    //main images are not store in the folder
+                    Utils.storeImageInGallery(gallery + imageFile.getOriginalFilename(), imageFile.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return placeRepo.save(place);
+        }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + "not found"));
+    }
 
     @DeleteMapping("/users/{uid}/places/{pid}")
-    public ResponseEntity<?> deletePlace(@PathVariable("uid") int uid,
-                              @PathVariable("pid") int pid){
+    public ResponseEntity<?> deletePlace(
+            @PathVariable("uid") int uid,
+            @PathVariable("pid") int pid
+    ){
+        validateUserNplace(uid, pid);
         return placeRepo.findByIdAndUserId(pid, uid).map(place -> {
+            User owner = userRepo.findById(uid).get();
+            owner.setPlace(null);
+            userRepo.save(owner);
+
             placeRepo.delete(place);
+            System.out.println("Place " + place.getId() + " was deleted");
+
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id "
                 + pid + " and UserID " + uid));
     }
 
-//    @PostMapping("/storePlaceImage")//int placeId, MultipartFile imageFile  //maybe replace and delete multiplace
-//    public String storeImage(MultiPlace mp){
-//        mp.storeImage();
-//        if(!placeRepo.existsById(mp.getPlaceId()))
-//            return "{'error':'place not found'}";
-//        Optional<Place> p = placeRepo.findById(mp.getPlaceId());
-//        p.get().addImage(mp.getImageFile().getOriginalFilename());
-//        placeRepo.save(p.get());
-//        return "{ 'success' : 'place image added'}";
-//    }
+    public void validateUserNplace(int uid, int pid){
+        if(!userRepo.existsById(uid))
+            throw new ResourceNotFoundException("UserID " + uid + " not found");
+        Optional<User> owner = userRepo.findById(uid);
+        if(owner.isPresent())
+            if(owner.get().getPlace().getId() != pid)
+                throw new ActionNotAllowedException("Place with PlaceID " + pid + " is not of users with UserID " + uid);
+    }
+
 }

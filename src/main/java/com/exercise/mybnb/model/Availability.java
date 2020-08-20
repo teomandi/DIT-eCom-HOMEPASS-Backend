@@ -1,5 +1,6 @@
 package com.exercise.mybnb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,6 +21,7 @@ public class Availability {
     @ManyToOne
     @JoinColumn(name="place_id", nullable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Place place;
 
     public int getId() {
@@ -44,5 +46,21 @@ public class Availability {
 
     public void setTo(Date to) {
         this.to = to;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    @Override
+    public String toString() {
+        return "Availability{" +
+                "from=" + from +
+                ", to=" + to +
+                '}';
     }
 }
