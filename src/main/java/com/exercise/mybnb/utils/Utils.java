@@ -1,5 +1,6 @@
 package com.exercise.mybnb.utils;
 
+import com.exercise.mybnb.model.Place;
 import com.exercise.mybnb.model.User;
 import org.apache.commons.io.FileUtils;
 
@@ -24,14 +25,14 @@ public class Utils {
     public static void storeImage(String filename, byte[] content) throws IOException {
         Path path = Paths.get(mainPath + filename);
         Files.write(path, content);
-        System.out.println("Image stored");
+        System.out.println("Image stored: " + mainPath + filename );
     }
 
     public static void storeImageInGallery(String fullPath, byte[] content) throws IOException {
         System.out.println("Full path: " + fullPath);
         Path path = Paths.get(fullPath);
         Files.write(path, content);
-        System.out.println("Image stored in gallery");
+        System.out.println("Image stored in gallery: " + fullPath);
     }
 
     public static byte[] getUserImageBytes(User u) throws IOException {
@@ -52,9 +53,15 @@ public class Utils {
         return new File(mainPath + "places/" + placeID).mkdir();
     }
 
-    public static boolean deletePlaceImage(String filename){
-        File file = new File(mainPath + "places/" +filename);
-        return file.delete();
+    public static byte[] getImageBytes(Place place, String filename) throws IOException {
+        String imagePath = Utils.getMainPath() + "places/" + place.getId() + "/" + filename;
+        File fimg = new File(imagePath);
+        System.out.println("Deleted: " + filename);
+        return FileUtils.readFileToByteArray(fimg);
+    }
+
+    public static boolean deleteImage(String filepath){
+        return new File(filepath).delete();
     }
 
 

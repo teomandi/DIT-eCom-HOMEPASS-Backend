@@ -1,10 +1,14 @@
 package com.exercise.mybnb.model;
 
+import com.exercise.mybnb.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.File;
+import java.io.IOException;
 
 @Entity
 @Table(name="images")
@@ -44,4 +48,6 @@ public class Image extends AuditModel {
     public void setPlace(Place place) {
         this.place = place;
     }
+
+
 }

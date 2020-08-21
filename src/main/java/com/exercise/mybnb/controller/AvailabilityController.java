@@ -40,7 +40,7 @@ public class AvailabilityController {
         }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + " not found"));
     }
 
-    @PostMapping("/places/{pid}/multi-availabilities")
+    @PostMapping("/places/{pid}/multi-availabilities")//not works.
     public ResponseEntity<?> postMultipleAvailabilitiesForPlace(@PathVariable("pid") int pid,
                                                    Set<Availability> avbs){
         System.out.println("Got availabilities : " + avbs.size());

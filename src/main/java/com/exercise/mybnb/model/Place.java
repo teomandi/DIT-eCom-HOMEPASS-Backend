@@ -48,7 +48,7 @@ public class Place extends AuditModel{
     private int area;
 
     @OneToMany(mappedBy = "place")
-    private Set<Benefits> benefits;
+    private Set<Benefit> benefits;
     @OneToMany(mappedBy = "place")
     private Set<Rule> rules;
     @OneToMany(mappedBy = "place")
@@ -193,11 +193,11 @@ public class Place extends AuditModel{
         this.availabilities = availabilities;
     }
 
-    public Set<Benefits> getBenefits() {
+    public Set<Benefit> getBenefits() {
         return benefits;
     }
 
-    public void setBenefits(Set<Benefits> benefits) {
+    public void setBenefits(Set<Benefit> benefits) {
         this.benefits = benefits;
     }
 

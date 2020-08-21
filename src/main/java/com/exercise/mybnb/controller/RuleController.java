@@ -1,6 +1,5 @@
 package com.exercise.mybnb.controller;
 
-import com.exercise.mybnb.model.Availability;
 import com.exercise.mybnb.model.Rule;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.repository.RuleRepo;
@@ -40,9 +39,9 @@ public class RuleController {
         }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + " not found"));
     }
 
-    @PostMapping("/places/{pid}/multi-rules")
+    @PostMapping("/places/{pid}/multi-rules")//not works.
     public ResponseEntity<?> postMultipleRulesForPlace(@PathVariable("pid") int pid,
-                                                                List<Rule> rules){
+                                                       List<Rule> rules){
         System.out.println("Got rules : " + rules.size());
         return placeRepo.findById(pid).map(place -> {
             System.out.println("found place: " + place.getId() + place.getAddress());
