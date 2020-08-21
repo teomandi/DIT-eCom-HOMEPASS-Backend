@@ -1,9 +1,6 @@
 package com.exercise.mybnb.model;
 
 import com.exercise.mybnb.utils.Utils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.File;
@@ -53,7 +50,7 @@ public class Place extends AuditModel{
     @OneToMany(mappedBy = "place")
     private Set<Benefits> benefits;
     @OneToMany(mappedBy = "place")
-    private Set<Rules> rules;
+    private Set<Rule> rules;
     @OneToMany(mappedBy = "place")
     private Set<Image> images;
     @OneToMany(mappedBy = "place")
@@ -204,11 +201,11 @@ public class Place extends AuditModel{
         this.benefits = benefits;
     }
 
-    public Set<Rules> getRules() {
+    public Set<Rule> getRules() {
         return rules;
     }
 
-    public void setRules(Set<Rules> rules) {
+    public void setRules(Set<Rule> rules) {
         this.rules = rules;
     }
 
