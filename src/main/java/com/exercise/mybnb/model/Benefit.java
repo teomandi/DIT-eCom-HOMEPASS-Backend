@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name="benefits")
@@ -34,6 +33,10 @@ public class Benefit {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public Place getPlace() {
         return place;
     }
@@ -42,8 +45,5 @@ public class Benefit {
         this.place = place;
     }
 
-    public void setContent(String content) {
-        content = content;
-    }
 
 }

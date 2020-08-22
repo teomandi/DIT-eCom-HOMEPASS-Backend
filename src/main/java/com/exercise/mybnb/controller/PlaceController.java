@@ -8,6 +8,7 @@ import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,13 @@ public class PlaceController {
         System.out.println("loooking for user with id : " + uid);
         //return placeRepo.findById(uid);
         return userRepo.findById(uid).map(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User Or Place not found"));
+    }
+
+    @GetMapping("/users/username/{username}/places")
+    public Place getPlaceByUsername(@PathVariable("username") String username){
+        System.out.println("loooking for user with username : " + username);
+        return userRepo.findByUsername(username).getPlace();
+                //(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User Or Place not found"));
     }
 
     @PostMapping("/users/{uid}/places")
@@ -130,6 +138,18 @@ public class PlaceController {
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id "
                 + pid + " and UserID " + uid));
+    }
+
+    @GetMapping("/places/{pid}/mainimage")
+    public ResponseEntity<byte[]> getMainImage(@PathVariable("pid") int pid){
+        return placeRepo.findById(pid).map(place -> {
+            try {
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(Utils.getImageBytes(place, place.getMainImage()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id " + pid));
     }
 
     public void validateUserNplace(int uid, int pid){

@@ -56,7 +56,6 @@ public class Utils {
     public static byte[] getImageBytes(Place place, String filename) throws IOException {
         String imagePath = Utils.getMainPath() + "places/" + place.getId() + "/" + filename;
         File fimg = new File(imagePath);
-        System.out.println("Deleted: " + filename);
         return FileUtils.readFileToByteArray(fimg);
     }
 

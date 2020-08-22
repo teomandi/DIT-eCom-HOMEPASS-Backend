@@ -31,7 +31,7 @@ public class BenefitController {
     @PostMapping("/places/{pid}/benefits")
     public Benefit postBenefitForPlace(@PathVariable("pid") int pid,
                                  Benefit benefit){
-        System.out.println("Got benefit : " + benefit.toString());
+        System.out.println("Got benefit : " + benefit.getContent());
         return placeRepo.findById(pid).map(place -> {
             System.out.println("found place: " + place.getId() + place.getAddress());
             benefit.setPlace(place);

@@ -1,6 +1,7 @@
 package com.exercise.mybnb.model;
 
 import com.exercise.mybnb.utils.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.File;
@@ -16,6 +17,7 @@ public class Place extends AuditModel{
     private int id;
 
     @OneToOne(mappedBy = "place")
+    @JsonIgnore
     private User user;
 
     @Column(name="main_image")

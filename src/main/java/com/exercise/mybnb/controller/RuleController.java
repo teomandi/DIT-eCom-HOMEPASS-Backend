@@ -28,10 +28,11 @@ public class RuleController {
     public Optional<Set<Rule>> getRulesByPlace(@PathVariable("pid") int pid){
         return ruleRepo.findByPlaceId(pid);
     }
+
     @PostMapping("/places/{pid}/rules")
     public Rule postRuleForPlace(@PathVariable("pid") int pid,
-                                           Rule rule){
-        System.out.println("Got rule : " + rule.toString());
+                                 Rule rule){
+        System.out.println("Got rule : " + rule.getContent());
         return placeRepo.findById(pid).map(place -> {
             System.out.println("found place: " + place.getId() + place.getAddress());
             rule.setPlace(place);
@@ -39,10 +40,10 @@ public class RuleController {
         }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + " not found"));
     }
 
-    @PostMapping("/places/{pid}/multi-rules")//not works.
+    @PostMapping("/places/{pid}/multi-rules")//not works. still
     public ResponseEntity<?> postMultipleRulesForPlace(@PathVariable("pid") int pid,
-                                                       List<Rule> rules){
-        System.out.println("Got rules : " + rules.size());
+                                                       Rule[] rules){
+        System.out.println("Got rules : " + rules.length);
         return placeRepo.findById(pid).map(place -> {
             System.out.println("found place: " + place.getId() + place.getAddress());
             for (Rule rule: rules ) {
