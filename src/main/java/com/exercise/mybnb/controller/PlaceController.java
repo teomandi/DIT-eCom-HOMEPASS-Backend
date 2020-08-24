@@ -6,6 +6,7 @@ import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
@@ -51,7 +52,6 @@ public class PlaceController {
     public Place getPlaceByUsername(@PathVariable("username") String username){
         System.out.println("loooking for user with username : " + username);
         return userRepo.findByUsername(username).getPlace();
-                //(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User Or Place not found"));
     }
 
     @PostMapping("/users/{uid}/places")
@@ -62,22 +62,26 @@ public class PlaceController {
         System.out.println("Storing new place " + uid);
         return userRepo.findById(uid).map(user -> {
             System.out.println("Owner user found: " + user.getUsername());
-            System.out.println("Owner user found: " + user.getPlace());
+            System.out.println("his place: " + user.getPlace());
             //check if he already have
             if( user.getPlace() != null){
                 System.out.println("User already have a place");
                 throw  new ActionNotAllowedException("User already have a place");
             }
-            place.setMainImage(imageFile.getOriginalFilename());
+//            RandomStringUtils.random(8, true, true)
+            String imageExt = FilenameUtils.getExtension(imageFile.getOriginalFilename());
+            System.out.println("Main image extension is: " + imageExt);
+            String imageName = "main." + imageExt;
+            place.setMainImage(imageName);
             Place p = placeRepo.save(place);
             user.setPlace(place);
             userRepo.save(user);
             String gallery = p.createGallery();
             if(!imageFile.isEmpty()) {
                 try {
-                    System.out.println("Storing main image at: " + gallery + imageFile.getOriginalFilename());
+                    System.out.println("Storing main image at: " + gallery + imageName);
                     //main images are not store in the folder
-                    Utils.storeImageInGallery(gallery + imageFile.getOriginalFilename(), imageFile.getBytes());
+                    Utils.storeImageInGallery(gallery + imageName, imageFile.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

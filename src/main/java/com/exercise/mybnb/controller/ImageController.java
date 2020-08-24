@@ -4,6 +4,7 @@ import com.exercise.mybnb.model.Image;
 import com.exercise.mybnb.repository.ImageRepo;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
@@ -43,13 +44,15 @@ public class ImageController {
             Utils.makeDir(pid);
             for (MultipartFile file : files) {
                 System.out.println("image got: " + file.getOriginalFilename());
+                String imageExt = FilenameUtils.getExtension(file.getOriginalFilename());
+                String filename = place.getId() + "_" + imageRepo.count() + "." + imageExt;
                 Image image = new Image();
-                image.setFilename(file.getOriginalFilename());
+                image.setFilename(filename);
                 image.setPlace(place);
                 imageRepo.save(image);
                 //store the image
                 try {
-                    Utils.storeImage("places/" + pid + "/" + file.getOriginalFilename(), file.getBytes());
+                    Utils.storeImage("places/" + pid + "/" +filename, file.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -84,6 +87,41 @@ public class ImageController {
             else
                 return ResponseEntity.notFound().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Image " + id + " not found"));
+    }
+
+    @PutMapping("/places/{pid}/images")
+    public ResponseEntity<?> putImage(@PathVariable("pid") int pid,
+                                         @RequestParam("images") MultipartFile[] files) {
+        System.out.println("putting images" + pid);
+        if (files == null)
+            throw new ResourceNotFoundException("Image file not found");
+        return placeRepo.findById(pid).map(place -> {
+            //delete all last images first
+            for(Image img: place.getImages()){
+                String filepath = Utils.getMainPath() + "places/" + place.getId() + "/" + img.getFilename();
+                if (Utils.deleteImage(filepath))
+                    System.out.println("Image " + img.toString() + " was deleted!");
+                    imageRepo.delete(img);
+            }
+            System.out.println("Mults files: " + files.length);
+            Utils.makeDir(pid);
+            for (MultipartFile file : files) {
+                System.out.println("image got: " + file.getOriginalFilename());
+                String imageExt = FilenameUtils.getExtension(file.getOriginalFilename());
+                String filename = place.getId() + "_" + imageRepo.count() + "." + imageExt;
+                Image image = new Image();
+                image.setFilename(filename);
+                image.setPlace(place);
+                imageRepo.save(image);
+                //store the image
+                try {
+                    Utils.storeImage("places/" + pid + "/" +filename, file.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("PlaceID " + pid + " not found"));
     }
 
 }
