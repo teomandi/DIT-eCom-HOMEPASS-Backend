@@ -33,7 +33,7 @@ public class ImageController {
     }
 
     @PostMapping("/places/{pid}/images")
-    public ResponseEntity<?> createImage(@PathVariable("pid") int pid,
+    public ResponseEntity<?> createImages(@PathVariable("pid") int pid,
                                          @RequestParam("images") MultipartFile[] files) {
         System.out.println("Posting images" + pid);
         if (files == null)
@@ -90,7 +90,7 @@ public class ImageController {
     }
 
     @PutMapping("/places/{pid}/images")
-    public ResponseEntity<?> putImage(@PathVariable("pid") int pid,
+    public ResponseEntity<?> putImages(@PathVariable("pid") int pid,
                                          @RequestParam("images") MultipartFile[] files) {
         System.out.println("putting images" + pid);
         if (files == null)

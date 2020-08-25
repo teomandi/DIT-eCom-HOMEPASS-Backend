@@ -112,11 +112,17 @@ public class PlaceController {
             place.setArea(p.getArea());
             if(!imageFile.isEmpty()) {
                 try {
-                    place.setMainImage(imageFile.getOriginalFilename());
                     String gallery = place.createGallery();
-                    System.out.println("Storing main image at: " + gallery + imageFile.getOriginalFilename());
+                    //remove old one
+                    Utils.deleteImage(gallery + place.getMainImage());
+
+                    String imageExt = FilenameUtils.getExtension(imageFile.getOriginalFilename());
+                    System.out.println("Main image extension is: " + imageExt);
+                    String imageName = "main." + imageExt;
+                    place.setMainImage(imageName);
+                    System.out.println("Storing main image at: " + gallery + imageName);
                     //main images are not store in the folder
-                    Utils.storeImageInGallery(gallery + imageFile.getOriginalFilename(), imageFile.getBytes());
+                    Utils.storeImageInGallery(gallery + imageName, imageFile.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -156,6 +162,7 @@ public class PlaceController {
         }).orElseThrow(() -> new ResourceNotFoundException("Place not found with id " + pid));
     }
 
+    //checks if the given user has the given place
     public void validateUserNplace(int uid, int pid){
         if(!userRepo.existsById(uid))
             throw new ResourceNotFoundException("UserID " + uid + " not found");
