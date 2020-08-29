@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -170,6 +171,17 @@ public class PlaceController {
         if(owner.isPresent())
             if(owner.get().getPlace().getId() != pid)
                 throw new ActionNotAllowedException("Place with PlaceID " + pid + " is not of users with UserID " + uid);
+    }
+
+    @GetMapping("/search")
+    public boolean searchPlaces(@RequestParam("from")Date from,
+                                @RequestParam("to")Date to){
+        System.out.println("from :" + from);
+        System.out.println("to :" + to);
+
+        return true;
+
+
     }
 
 }
