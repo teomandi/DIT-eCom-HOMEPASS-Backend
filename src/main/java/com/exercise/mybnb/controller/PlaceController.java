@@ -8,7 +8,13 @@ import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +37,21 @@ public class PlaceController {
     UserRepo userRepo;
 
     @GetMapping("/places")
-    public List<Place> getAllPlaces(){
-        return placeRepo.findAll();
+    public ResponseEntity<List<Place>> getAllPlaces(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "costPerPerson") String sortBy
+    ){
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Place> pagedResult = placeRepo.findAll(paging);
+        List<Place> placeList = null;
+        if(pagedResult.hasContent()) {
+            placeList = pagedResult.getContent();
+        } else {
+            placeList = new ArrayList<Place>();
+        }
+        System.out.println("Heeeeeeeeeeeeeeere " + placeList.size());
+        return new ResponseEntity<List<Place>>(placeList, new HttpHeaders(), HttpStatus.OK);
     }
 //    public Page<Place> getAllPlaces(Pageable pageable){
 //        return placeRepo.findAll(pageable);
@@ -174,12 +194,21 @@ public class PlaceController {
     }
 
     @GetMapping("/search")
-    public boolean searchPlaces(@RequestParam("from")Date from,
-                                @RequestParam("to")Date to){
-        System.out.println("from :" + from);
-        System.out.println("to :" + to);
+    public String searchPlaces(
+            @RequestParam("type")String type,
+            @RequestParam("from")Date from,
+            @RequestParam("to")Date to,
+            @RequestParam("lat")double lat,
+            @RequestParam("lon")double lon,
+            @RequestParam("num")int num){
+        System.out.println("type: " + type);
+        System.out.println("from: " + from);
+        System.out.println("to: " + to);
+        System.out.println("lat: " + lat);
+        System.out.println("lon: " + lon);
+        System.out.println("num: " + num);
 
-        return true;
+        return type+" "+from+" "+to+" "+lat+" "+lon+" "+num;
 
 
     }

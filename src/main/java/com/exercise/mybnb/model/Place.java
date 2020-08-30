@@ -57,6 +57,8 @@ public class Place extends AuditModel{
     private Set<Image> images;
     @OneToMany(mappedBy = "place")
     private Set<Availability> availabilities;
+    @OneToMany(mappedBy = "place")
+    private Set<Rating> ratings;
 
 
     public int getId() {
@@ -217,6 +219,14 @@ public class Place extends AuditModel{
 
     public void setImages(Set<Image> images) {
         this.images = images;
+    }
+
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
     }
 
     public String createGallery(){

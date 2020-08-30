@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 
 @Entity
@@ -39,6 +40,8 @@ public class User extends AuditModel{
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     @JsonIgnore
     private Place place;
+    @OneToMany(mappedBy = "user")
+    private Set<Rating> ratings;
 
     public Place getPlace() {
         return place;
