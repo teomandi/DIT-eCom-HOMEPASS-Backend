@@ -193,6 +193,13 @@ public class PlaceController {
                 throw new ActionNotAllowedException("Place with PlaceID " + pid + " is not of users with UserID " + uid);
     }
 
+    @GetMapping("/places/{pid}/users")
+    public User getPlaceOwner(@PathVariable("pid") int pid){
+        return placeRepo.findById(pid).map(place ->{
+            return place.getUser();
+        }).orElseThrow(() -> new ResourceNotFoundException("Place with Id: " + pid + "not found"));
+    }
+
     @GetMapping("/search")
     public String searchPlaces(
             @RequestParam("type")String type,
