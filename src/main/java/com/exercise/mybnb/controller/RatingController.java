@@ -1,16 +1,17 @@
 package com.exercise.mybnb.controller;
 
 import com.exercise.mybnb.exception.ResourceNotFoundException;
+import com.exercise.mybnb.model.Benefit;
 import com.exercise.mybnb.model.Rating;
 import com.exercise.mybnb.repository.PlaceRepo;
 import com.exercise.mybnb.repository.RatingRepo;
 import com.exercise.mybnb.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class RatingController {
@@ -44,4 +45,10 @@ public class RatingController {
             ratingRepo.delete(rating);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new org.springframework.data.rest.webmvc.ResourceNotFoundException("RatingId " + rid + " not found"));    }
+
+    @GetMapping("/places/{pid}/ratings")
+    public Optional<Set<Rating>> getRatingsByPlace(@PathVariable("pid") int pid){
+        return ratingRepo.findByPlaceId(pid);
+    }
+
 }
