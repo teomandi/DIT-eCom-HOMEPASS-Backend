@@ -43,6 +43,16 @@ public class User extends AuditModel{
     @OneToMany(mappedBy = "user")
     private Set<Rating> ratings;
 
+    @OneToMany(mappedBy = "sender")
+    @JsonIgnore
+    private Set<Message> sendedMessages;
+    @OneToMany(mappedBy = "reciever")
+    @JsonIgnore
+    private Set<Message> recievedMessages;
+    @OneToMany(mappedBy = "hoster")
+    @JsonIgnore
+    private Set<Message> messagesHoster;
+
     public Place getPlace() {
         return place;
     }
