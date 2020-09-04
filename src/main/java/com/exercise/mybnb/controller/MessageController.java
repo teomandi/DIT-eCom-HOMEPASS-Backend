@@ -65,7 +65,6 @@ public class MessageController {
     public List<Message> getUsersChatWithoutHost(
             @PathVariable("u1id") int user_1, //this is the user that makes the requests
             @PathVariable("u2id") int user_2
-
     ){
         return userRepo.findById(user_1).map(user1 -> {
             return userRepo.findById(user_2).map(user2 -> {
