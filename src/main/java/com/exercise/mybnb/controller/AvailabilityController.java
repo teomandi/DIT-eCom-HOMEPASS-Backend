@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -82,6 +85,22 @@ public class AvailabilityController {
             availRepo.delete(availability);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("AvailId " + aid + " not found"));
+    }
+
+    @GetMapping("/datehandling")
+    public String datehandler(
+            @RequestParam("from") Date from,
+            @RequestParam("to") Date to
+    ) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date avStart = sdf.parse("2020/8/1");
+        Date avEnd = sdf.parse("2020/8/31");
+
+        if(avStart.before(from) && avEnd.after(to)){
+            System.out.println("availability accepted");
+        }
+
+        return avStart.toString() ;
     }
 
 }

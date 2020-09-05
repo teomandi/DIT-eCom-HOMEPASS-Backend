@@ -20,6 +20,9 @@ public interface MessageRepo extends JpaRepository<Message, Integer> {
 
     List<Message> findMessageByHosterOrderByCreatedAtDesc(User hoster);
 
-//    List<Message> findMessageBy
+    @Query("SELECT m FROM Message m WHERE m.hoster<>?1 and (m.reciever=?1 or m.sender=?1) order by  m.createdAt ")
+    List<Message> findUserMessages(User user);
+
+
 
 }

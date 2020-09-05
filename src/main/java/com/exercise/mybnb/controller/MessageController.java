@@ -75,10 +75,35 @@ public class MessageController {
 
     //returns the latest message from each user
     @GetMapping("messages/host/{uid}")
-    public List<Message> getUsersChatWithoutHost(@PathVariable("uid") int uid){
+    public List<Message> getUsersMessagesAsHost(@PathVariable("uid") int uid){
         return userRepo.findById(uid).map(user -> {
             List<Message> latestMessagePerChat = new ArrayList<>();
             List<Message> userMessages = messageRepo.findMessageByHosterOrderByCreatedAtDesc(user);
+            List<Integer> includedUsers = new ArrayList<>();
+            for(Message msg: userMessages){
+                if(msg.getSender().getId() == user.getId()){
+                    //our user send the message so check the reciever
+                    if(!includedUsers.contains(msg.getReciever().getId())){
+                        latestMessagePerChat.add(msg);
+                        includedUsers.add(msg.getReciever().getId());
+                    }
+                }else {
+                    //our user got the message so check the sender
+                    if(!includedUsers.contains(msg.getSender().getId())){
+                        latestMessagePerChat.add(msg);
+                        includedUsers.add(msg.getSender().getId());
+                    }
+                }
+            }
+            return latestMessagePerChat;
+        }).orElseThrow(() -> new ResourceNotFoundException("User with id " + uid + " not found"));
+    }
+
+    @GetMapping("messages/{uid}")
+    public List<Message> getUsersMessagesAsNotHost(@PathVariable("uid") int uid){
+        return userRepo.findById(uid).map(user -> {
+            List<Message> latestMessagePerChat = new ArrayList<>();
+            List<Message> userMessages = messageRepo.findUserMessages(user); //<----check
             List<Integer> includedUsers = new ArrayList<>();
             for(Message msg: userMessages){
                 if(msg.getSender().getId() == user.getId()){
