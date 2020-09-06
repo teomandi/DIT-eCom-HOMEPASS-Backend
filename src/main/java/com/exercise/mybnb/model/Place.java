@@ -60,6 +60,18 @@ public class Place extends AuditModel{
     @OneToMany(mappedBy = "place")
     private Set<Rating> ratings;
 
+    @OneToMany(mappedBy = "place")
+    @JsonIgnore
+    private Set<Reservation> reservations;
+
+    public String createGallery(){
+        String dir = Utils.getMainPath() + "places/" + id + "/";
+        if(Files.notExists(Paths.get(dir))){
+            new File(dir).mkdir();
+            System.out.println("GalleryDir created: " + dir);
+        }
+        return dir;
+    }
 
     public int getId() {
         return id;
@@ -229,12 +241,11 @@ public class Place extends AuditModel{
         this.ratings = ratings;
     }
 
-    public String createGallery(){
-        String dir = Utils.getMainPath() + "places/" + id + "/";
-        if(Files.notExists(Paths.get(dir))){
-            new File(dir).mkdir();
-            System.out.println("GalleryDir created: " + dir);
-        }
-        return dir;
+    public Set<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

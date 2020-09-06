@@ -52,6 +52,9 @@ public class User extends AuditModel{
     @OneToMany(mappedBy = "hoster")
     @JsonIgnore
     private Set<Message> messagesHoster;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Reservation> reservations;
 
     public Place getPlace() {
         return place;
@@ -139,5 +142,45 @@ public class User extends AuditModel{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    public Set<Message> getSendedMessages() {
+        return sendedMessages;
+    }
+
+    public void setSendedMessages(Set<Message> sendedMessages) {
+        this.sendedMessages = sendedMessages;
+    }
+
+    public Set<Message> getRecievedMessages() {
+        return recievedMessages;
+    }
+
+    public void setRecievedMessages(Set<Message> recievedMessages) {
+        this.recievedMessages = recievedMessages;
+    }
+
+    public Set<Message> getMessagesHoster() {
+        return messagesHoster;
+    }
+
+    public void setMessagesHoster(Set<Message> messagesHoster) {
+        this.messagesHoster = messagesHoster;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
