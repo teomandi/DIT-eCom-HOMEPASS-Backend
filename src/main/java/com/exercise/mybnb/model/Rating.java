@@ -14,7 +14,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name="degree")
-    private int degree;
+    private float degree;
     @Column(name="comment")
     private String comment;
 
@@ -38,11 +38,11 @@ public class Rating {
         this.id = id;
     }
 
-    public int getDegree() {
+    public float getDegree() {
         return degree;
     }
 
-    public void setDegree(int degree) {
+    public void setDegree(float degree) {
         this.degree = degree;
     }
 

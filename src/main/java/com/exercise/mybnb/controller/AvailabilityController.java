@@ -99,7 +99,6 @@ public class AvailabilityController {
         if(avStart.before(from) && avEnd.after(to)){
             System.out.println("availability accepted");
         }
-
         return avStart.toString() ;
     }
 

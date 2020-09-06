@@ -25,9 +25,9 @@ public class Place extends AuditModel{
     @Column(name="address")
     private String address;
     @Column(name="latitude")
-    private String latitude;
+    private double latitude;
     @Column(name="longitude")
-    private String longitude;
+    private double longitude;
     @Column(name="max_guests")
     private int maxGuests;
     @Column(name="min_cost")
@@ -105,19 +105,19 @@ public class Place extends AuditModel{
         this.address = address;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

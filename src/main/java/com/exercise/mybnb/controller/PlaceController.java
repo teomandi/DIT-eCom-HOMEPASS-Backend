@@ -1,6 +1,7 @@
 package com.exercise.mybnb.controller;
 
 import com.exercise.mybnb.exception.ActionNotAllowedException;
+import com.exercise.mybnb.model.Availability;
 import com.exercise.mybnb.model.Place;
 import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.PlaceRepo;
@@ -201,23 +202,42 @@ public class PlaceController {
     }
 
     @GetMapping("/search")
-    public String searchPlaces(
+    public List<Place> searchPlaces(
             @RequestParam("type")String type,
             @RequestParam("from")Date from,
             @RequestParam("to")Date to,
             @RequestParam("lat")double lat,
             @RequestParam("lon")double lon,
             @RequestParam("num")int num){
+        System.out.println("SEARCHING");
         System.out.println("type: " + type);
         System.out.println("from: " + from);
         System.out.println("to: " + to);
         System.out.println("lat: " + lat);
         System.out.println("lon: " + lon);
         System.out.println("num: " + num);
-
-        return type+" "+from+" "+to+" "+lat+" "+lon+" "+num;
-
-
+        double minLat = lat - 0.1f;
+        double maxLat = lat + 0.1f;
+        double minLong = lon - 0.1f;
+        double maxLong = lon + 0.1f;
+        List<Place> closePlaces = placeRepo.getClosePlaces(minLat, maxLat, minLong, maxLong);
+        System.out.println("Found: " + closePlaces.size() + " close places");
+        List<Place> acceptedPlaces = new ArrayList<>();
+        for(Place p: closePlaces){
+            //check the cost!
+            if(p.getMinCost() > num * p.getCostPerPerson())
+                continue;//ingore it
+            //check availabilities
+            for (Availability av: p.getAvailabilities()){
+                if((av.getFrom().before(from) || av.getFrom().equals(from))
+                && (av.getTo().after(to) || av.getTo().equals(to))){
+                    System.out.println("accepted place: " + p.getAddress());
+                    acceptedPlaces.add(p);
+                    break;
+                }
+            }
+        }
+        return acceptedPlaces;
     }
 
 }
