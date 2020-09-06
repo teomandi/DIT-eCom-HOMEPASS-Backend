@@ -40,6 +40,10 @@ public class ReservationController {
             return placeRepo.findById(pid).map(place -> {
                 System.out.println("Place found: " + place.getAddress());
                 Set<Availability> availabilities = place.getAvailabilities();
+                if(availabilities.isEmpty()){
+                    System.out.println("no availabilities found!!!");
+                    return false;
+                }
                 System.out.println("checking avs for: " + start + "---" + end);
                 for(Availability av: availabilities){
                     System.out.println("checking av: " + av.toString());
@@ -64,6 +68,11 @@ public class ReservationController {
                             }
                             availabilityRepo.delete(av);
                             System.out.println("new availabilities handled");
+                            if(reservationRepo.existsByUserAndPlace(user, place)){
+                                System.out.println("Older reservation from the same user in the same place found and it will be DELETED!");
+                                Reservation r = reservationRepo.findByUserAndPlace(user, place);
+                                reservationRepo.delete(r);
+                            }
                             //create the reservation
                             Reservation reservation = new Reservation();
                             reservation.setStart(start);
@@ -132,13 +141,5 @@ public class ReservationController {
                     return false;
             }).orElseThrow(() -> new ResourceNotFoundException("Place with id " + pid + " not found!"));
         }).orElseThrow(() -> new ResourceNotFoundException("User with id " + uid + " not found!"));
-    }
-
-    @PostMapping("/reservations/dates")
-    public boolean canRate(
-            @RequestParam("start") Date start,
-            @RequestParam("end") Date end
-    ){
-        return new Date().after(end);
     }
 }
