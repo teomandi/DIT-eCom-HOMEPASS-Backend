@@ -215,6 +215,9 @@ public class PlaceController {
         System.out.println("lat: " + lat);
         System.out.println("lon: " + lon);
         System.out.println("num: " + num);
+
+        System.out.println("pageNo: " + pageNo);
+        System.out.println("pageSize: " + pageSize);
         double minLat = lat - 0.1f;
         double maxLat = lat + 0.1f;
         double minLong = lon - 0.1f;
@@ -223,9 +226,12 @@ public class PlaceController {
         System.out.println("Found: " + closePlaces.size() + " close places");
         List<Place> acceptedPlaces = new ArrayList<>();
         for(Place p: closePlaces){
+            System.out.println("looking the: " + p.getAddress());
             //check the cost!
+            System.out.println(p.getMinCost() +" > " +  num + " * " + p.getCostPerPerson());
             if(p.getMinCost() > num * p.getCostPerPerson())
                 continue;//ignore it
+            System.out.println("Cost is ok");
             //check availabilities
             for (Availability av: p.getAvailabilities()){
                 if((av.getFrom().before(from) || av.getFrom().equals(from))
@@ -237,7 +243,10 @@ public class PlaceController {
             }
         }
         int startIndex = pageNo * pageSize;
-        int endIndex = pageNo * pageSize + pageSize -1;
+        int endIndex = (pageNo * pageSize) + pageSize -1;
+        System.out.println("Start: " + startIndex + " End: " + endIndex);
+        if(acceptedPlaces.size() == 0)
+            return acceptedPlaces;
         if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() > endIndex)
             return acceptedPlaces.subList(startIndex, endIndex);
         else if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() < endIndex)
