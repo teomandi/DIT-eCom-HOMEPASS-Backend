@@ -51,12 +51,9 @@ public class PlaceController {
         } else {
             placeList = new ArrayList<Place>();
         }
-        System.out.println("Heeeeeeeeeeeeeeere " + placeList.size());
+        System.out.println("All places that found: " + placeList.size());
         return new ResponseEntity<List<Place>>(placeList, new HttpHeaders(), HttpStatus.OK);
     }
-//    public Page<Place> getAllPlaces(Pageable pageable){
-//        return placeRepo.findAll(pageable);
-//    }
 
     @GetMapping("/places/{pid}")
     public Optional<Place> getPlace(@PathVariable("pid") int pid) {
@@ -203,6 +200,8 @@ public class PlaceController {
 
     @GetMapping("/search")
     public List<Place> searchPlaces(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam("type")String type,
             @RequestParam("from")Date from,
             @RequestParam("to")Date to,
@@ -226,7 +225,7 @@ public class PlaceController {
         for(Place p: closePlaces){
             //check the cost!
             if(p.getMinCost() > num * p.getCostPerPerson())
-                continue;//ingore it
+                continue;//ignore it
             //check availabilities
             for (Availability av: p.getAvailabilities()){
                 if((av.getFrom().before(from) || av.getFrom().equals(from))
@@ -237,7 +236,15 @@ public class PlaceController {
                 }
             }
         }
-        return acceptedPlaces;
+        int startIndex = pageNo * pageSize;
+        int endIndex = pageNo * pageSize + pageSize -1;
+        if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() > endIndex)
+            return acceptedPlaces.subList(startIndex, endIndex);
+        else if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() < endIndex)
+            return acceptedPlaces.subList(startIndex, acceptedPlaces.size() -1);
+        else
+            return null;
+
     }
 
 }

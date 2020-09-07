@@ -84,74 +84,73 @@ public class MybnbApplication {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Bean
-    public void dataGenerator(){
-        System.out.println("~Data Generator~");
-        System.out.println("Current users in DB: : " + userRepo.count());
-        System.out.println("Current places in DB: : " + placeRepo.count());
-        if(userRepo.count() > 10)
-            return;
-        // 1
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setPassword(passwordEncoder.encode("111"));
-        user1.setEmail("11@11.11");
-        user1.setFirstName("prwtos");
-        user1.setLastName("xristis");
-        user1.setPhone("111");
-        user1.setHost(true);
-        user1.setImageName("default_user.jpg");
-        user1.setAddress("1111");
-        userRepo.save(user1);
-        // 2
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setPassword(passwordEncoder.encode("222"));
-        user2.setEmail("22@22.22");
-        user2.setFirstName("deuteros");
-        user2.setLastName("xristis");
-        user2.setPhone("222");
-        user2.setHost(true);
-        user2.setImageName("default_user.jpg");
-        user2.setAddress("222");
-        userRepo.save(user2);
-        // 3
-        User user3 = new User();
-        user3.setUsername("user3");
-        user3.setPassword(passwordEncoder.encode("333"));
-        user3.setEmail("22@22.22");
-        user3.setFirstName("tritos");
-        user3.setLastName("xristis");
-        user3.setPhone("333");
-        user3.setHost(true);
-        user3.setImageName("default_user.jpg");
-        user3.setAddress("333");
-        userRepo.save(user3);
-        // 4
-        User user4 = new User();
-        user4.setUsername("user4");
-        user4.setPassword(passwordEncoder.encode("444"));
-        user4.setEmail("44@44.44");
-        user4.setFirstName("tetartos");
-        user4.setLastName("xristis");
-        user4.setPhone("444");
-        user4.setHost(true);
-        user4.setImageName("default_user.jpg");
-        user4.setAddress("4444");
-        userRepo.save(user4);
-        // 5
-        User user5 = new User();
-        user5.setUsername("user5");
-        user5.setPassword(passwordEncoder.encode("555"));
-        user5.setEmail("55@55.55");
-        user5.setFirstName("pemptos");
-        user5.setLastName("xristis");
-        user5.setPhone("555");
-        user5.setHost(true);
-        user5.setImageName("default_user.jpg");
-        user5.setAddress("5555");
-        userRepo.save(user5);
-
-    }
+//    @Bean
+//    public void dataGenerator(){
+//        System.out.println("~Data Generator~");
+//        System.out.println("Current users in DB: : " + userRepo.count());
+//        System.out.println("Current places in DB: : " + placeRepo.count());
+//        if(userRepo.count() > 10)
+//            return;
+//        // 1
+//        User user1 = new User();
+//        user1.setUsername("user1");
+//        user1.setPassword(passwordEncoder.encode("111"));
+//        user1.setEmail("11@11.11");
+//        user1.setFirstName("prwtos");
+//        user1.setLastName("xristis");
+//        user1.setPhone("111");
+//        user1.setHost(true);
+//        user1.setImageName("default_user.jpg");
+//        user1.setAddress("1111");
+//        userRepo.save(user1);
+//        // 2
+//        User user2 = new User();
+//        user2.setUsername("user2");
+//        user2.setPassword(passwordEncoder.encode("222"));
+//        user2.setEmail("22@22.22");
+//        user2.setFirstName("deuteros");
+//        user2.setLastName("xristis");
+//        user2.setPhone("222");
+//        user2.setHost(true);
+//        user2.setImageName("default_user.jpg");
+//        user2.setAddress("222");
+//        userRepo.save(user2);
+//        // 3
+//        User user3 = new User();
+//        user3.setUsername("user3");
+//        user3.setPassword(passwordEncoder.encode("333"));
+//        user3.setEmail("22@22.22");
+//        user3.setFirstName("tritos");
+//        user3.setLastName("xristis");
+//        user3.setPhone("333");
+//        user3.setHost(true);
+//        user3.setImageName("default_user.jpg");
+//        user3.setAddress("333");
+//        userRepo.save(user3);
+//        // 4
+//        User user4 = new User();
+//        user4.setUsername("user4");
+//        user4.setPassword(passwordEncoder.encode("444"));
+//        user4.setEmail("44@44.44");
+//        user4.setFirstName("tetartos");
+//        user4.setLastName("xristis");
+//        user4.setPhone("444");
+//        user4.setHost(true);
+//        user4.setImageName("default_user.jpg");
+//        user4.setAddress("4444");
+//        userRepo.save(user4);
+//        // 5
+//        User user5 = new User();
+//        user5.setUsername("user5");
+//        user5.setPassword(passwordEncoder.encode("555"));
+//        user5.setEmail("55@55.55");
+//        user5.setFirstName("pemptos");
+//        user5.setLastName("xristis");
+//        user5.setPhone("555");
+//        user5.setHost(true);
+//        user5.setImageName("default_user.jpg");
+//        user5.setAddress("5555");
+//        userRepo.save(user5);
+//    }
 
 }
