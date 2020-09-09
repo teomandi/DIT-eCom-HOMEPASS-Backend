@@ -3,8 +3,10 @@ package com.exercise.mybnb.controller;
 import com.exercise.mybnb.exception.ActionNotAllowedException;
 import com.exercise.mybnb.model.Availability;
 import com.exercise.mybnb.model.Place;
+import com.exercise.mybnb.model.Search;
 import com.exercise.mybnb.model.User;
 import com.exercise.mybnb.repository.PlaceRepo;
+import com.exercise.mybnb.repository.SearchRepo;
 import com.exercise.mybnb.repository.UserRepo;
 import com.exercise.mybnb.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
@@ -36,6 +38,8 @@ public class PlaceController {
     PlaceRepo placeRepo;
     @Autowired
     UserRepo userRepo;
+    @Autowired
+    SearchRepo searchRepo;
 
     @GetMapping("/places")
     public ResponseEntity<List<Place>> getAllPlaces(
@@ -62,7 +66,7 @@ public class PlaceController {
 
     @GetMapping("/users/{uid}/places")
     public Place getPlaceByUserId(@PathVariable("uid") int uid){
-        System.out.println("loooking for user with id : " + uid);
+        System.out.println("looking for user with id : " + uid);
         //return placeRepo.findById(uid);
         return userRepo.findById(uid).map(User::getPlace).orElseThrow(() -> new ResourceNotFoundException("User Or Place not found"));
     }
@@ -202,6 +206,7 @@ public class PlaceController {
     public List<Place> searchPlaces(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam("uid") int uid,
             @RequestParam("type")String type,
             @RequestParam("from")Date from,
             @RequestParam("to")Date to,
@@ -225,6 +230,12 @@ public class PlaceController {
         List<Place> closePlaces = placeRepo.getClosePlaces(minLat, maxLat, minLong, maxLong);
         System.out.println("Found: " + closePlaces.size() + " close places");
         List<Place> acceptedPlaces = new ArrayList<>();
+        if(closePlaces.size()>0){
+            User u = userRepo.findById(uid).get();
+            Search newSearch = new Search(lat, lon, u);
+            searchRepo.save(newSearch);
+            System.out.println("new search stored!");
+        }
         for(Place p: closePlaces){
             System.out.println("looking the: " + p.getAddress());
             //check the cost!
@@ -232,6 +243,10 @@ public class PlaceController {
             if(p.getMinCost() > num * p.getCostPerPerson())
                 continue;//ignore it
             System.out.println("Cost is ok");
+            //check the type
+            if(!type.equals(p.getType()))
+                continue;
+            System.out.println("Type is ok");
             //check availabilities
             for (Availability av: p.getAvailabilities()){
                 if((av.getFrom().before(from) || av.getFrom().equals(from))
@@ -245,14 +260,21 @@ public class PlaceController {
         int startIndex = pageNo * pageSize;
         int endIndex = (pageNo * pageSize) + pageSize -1;
         System.out.println("Start: " + startIndex + " End: " + endIndex);
+        System.out.println("accepted results ::" + acceptedPlaces.size());
         if(acceptedPlaces.size() == 0)
             return acceptedPlaces;
-        if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() > endIndex)
+        if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() > endIndex) {
+            System.out.println("Case 1");
             return acceptedPlaces.subList(startIndex, endIndex);
-        else if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() < endIndex)
-            return acceptedPlaces.subList(startIndex, acceptedPlaces.size() -1);
-        else
+        }
+        else if(acceptedPlaces.size() >= startIndex && acceptedPlaces.size() < endIndex) {
+            System.out.println("Case 2");
+            return acceptedPlaces.subList(startIndex, acceptedPlaces.size());
+        }
+        else {
+            System.out.println("Case 3");
             return null;
+        }
 
     }
 

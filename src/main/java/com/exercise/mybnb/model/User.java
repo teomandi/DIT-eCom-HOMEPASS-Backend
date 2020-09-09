@@ -56,6 +56,10 @@ public class User extends AuditModel{
     @JsonIgnore
     private Set<Reservation> reservations;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Search> searches;
+
     public Place getPlace() {
         return place;
     }
