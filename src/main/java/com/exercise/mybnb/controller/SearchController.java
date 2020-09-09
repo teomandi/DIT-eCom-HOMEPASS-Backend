@@ -31,14 +31,15 @@ public class SearchController {
         }).orElseThrow(() -> new ResourceNotFoundException("User " + uid + " not found"));
     }
 
-    @GetMapping("/search/{uid}/places")
+    @GetMapping("/search/places")
     public List<Place> getPreviousSearches(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @PathVariable("uid") int uid
+            @RequestParam("uid") int uid
     ){
         return userRepo.findById(uid).map(user -> {
-            List<Search> lastSearches = searchRepo.findByUserOrOrderByCreatedAt(user);
+            System.out.println("user for search history found: " + user.getUsername());
+            List<Search> lastSearches = searchRepo.findByUser(user);
             List<Place> places = new ArrayList<>();
             for(Search search: lastSearches){
                 double minLat = search.getLatitude() - 0.3f;
@@ -65,7 +66,6 @@ public class SearchController {
                 System.out.println("Case 3");
                 return null;
             }
-            return places;
         }).orElseThrow(() -> new ResourceNotFoundException("User " + uid + " not found"));
     }
 }

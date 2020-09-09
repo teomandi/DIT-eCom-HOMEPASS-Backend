@@ -114,10 +114,12 @@ public class PlaceController {
     }
 
     @PutMapping("/users/{uid}/places/{pid}")
-    public Place updatePlace(@PathVariable("uid") int uid,
-                             @PathVariable("pid") int pid,
-                             @Valid Place p,
-                             @RequestParam("image") MultipartFile imageFile){
+    public Place updatePlace(
+            @PathVariable("uid") int uid,
+            @PathVariable("pid") int pid,
+            @Valid Place p,
+            @RequestParam("image") MultipartFile imageFile
+    ){
         validateUserNplace(uid, pid);
         return placeRepo.findById(pid).map(place -> {
             place.setAddress(p.getAddress());

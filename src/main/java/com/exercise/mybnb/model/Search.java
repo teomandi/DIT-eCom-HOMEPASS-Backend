@@ -27,6 +27,9 @@ public class Search extends AuditModel{
         this.user = user;
     }
 
+    public Search() {
+    }
+
     public int getId() {
         return id;
     }

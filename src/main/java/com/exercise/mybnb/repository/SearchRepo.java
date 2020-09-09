@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface SearchRepo extends JpaRepository<Search, Integer>  {
     boolean existsByUser(User u);
-    List<Search> findByUserOrOrderByCreatedAt(User u);
+    List<Search> findByUser(User u);
 }
