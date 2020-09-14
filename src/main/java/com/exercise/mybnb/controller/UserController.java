@@ -83,7 +83,7 @@ public class UserController {
         }
         else {
             System.out.println("ImageFile is null");
-            u.setImageName("default_user.jpg");
+            u.setImageName("default_user.png");
         }
         System.out.println("Before " + u.getPassword());
         u.setPassword(passwordEncoder.encode(u.getPassword()));

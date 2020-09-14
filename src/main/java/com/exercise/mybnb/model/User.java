@@ -33,7 +33,7 @@ public class User extends AuditModel{
     @Column(name="is_host")
     private boolean isHost = false;
     @Column(name="image_name")
-    private String imageName = "default_user.jpg";
+    private String imageName = "default_user.png";
     @Column(name="address")
     private String address;
     @OneToOne(cascade = CascadeType.ALL)

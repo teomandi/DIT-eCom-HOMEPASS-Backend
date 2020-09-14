@@ -77,12 +77,12 @@ public class MybnbApplication {
         return connector;
     }
 
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private PlaceRepo placeRepo;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private UserRepo userRepo;
+//    @Autowired
+//    private PlaceRepo placeRepo;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 //    @Bean
 //    public void dataGenerator(){

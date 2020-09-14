@@ -251,6 +251,7 @@ public class PlaceController {
             System.out.println("Type is ok");
             //check availabilities
             for (Availability av: p.getAvailabilities()){
+                System.out.println("Availability: " + av.toString());
                 if((av.getFrom().before(from) || av.getFrom().equals(from))
                 && (av.getTo().after(to) || av.getTo().equals(to))){
                     System.out.println("accepted place: " + p.getAddress());
