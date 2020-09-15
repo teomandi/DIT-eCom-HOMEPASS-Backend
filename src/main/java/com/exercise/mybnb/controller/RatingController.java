@@ -40,7 +40,7 @@ public class RatingController {
     }
 
     @DeleteMapping("/ratings/{aid}")
-    public ResponseEntity<?> deleteAvailability(@PathVariable("aid") int rid){
+    public ResponseEntity<?> deleteRating(@PathVariable("aid") int rid){
         return ratingRepo.findById(rid).map(rating -> {
             ratingRepo.delete(rating);
             return ResponseEntity.ok().build();
