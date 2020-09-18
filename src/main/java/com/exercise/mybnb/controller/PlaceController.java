@@ -225,10 +225,10 @@ public class PlaceController {
 
         System.out.println("pageNo: " + pageNo);
         System.out.println("pageSize: " + pageSize);
-        double minLat = lat - 0.1f;
-        double maxLat = lat + 0.1f;
-        double minLong = lon - 0.1f;
-        double maxLong = lon + 0.1f;
+        double minLat = lat - 0.3f;
+        double maxLat = lat + 0.3f;
+        double minLong = lon - 0.3f;
+        double maxLong = lon + 0.3f;
         List<Place> closePlaces = placeRepo.getClosePlaces(minLat, maxLat, minLong, maxLong);
         System.out.println("Found: " + closePlaces.size() + " close places");
         List<Place> acceptedPlaces = new ArrayList<>();
