@@ -1,13 +1,8 @@
 package com.exercise.mybnb.controller;
 
 import com.exercise.mybnb.exception.ActionNotAllowedException;
-import com.exercise.mybnb.model.Availability;
-import com.exercise.mybnb.model.Place;
-import com.exercise.mybnb.model.Search;
-import com.exercise.mybnb.model.User;
-import com.exercise.mybnb.repository.PlaceRepo;
-import com.exercise.mybnb.repository.SearchRepo;
-import com.exercise.mybnb.repository.UserRepo;
+import com.exercise.mybnb.model.*;
+import com.exercise.mybnb.repository.*;
 import com.exercise.mybnb.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class PlaceController {
@@ -40,6 +32,10 @@ public class PlaceController {
     UserRepo userRepo;
     @Autowired
     SearchRepo searchRepo;
+    @Autowired
+    ReservationRepo reservationRepo;
+    @Autowired
+    RatingRepo ratingRepo;
 
     @GetMapping("/places")
     public ResponseEntity<List<Place>> getAllPlaces(
@@ -164,6 +160,17 @@ public class PlaceController {
         validateUserNplace(uid, pid);
         return placeRepo.findByIdAndUserId(pid, uid).map(place -> {
             User owner = userRepo.findById(uid).get();
+            //delete reservation and ratings also
+            Set<Reservation> reservations = place.getReservations();
+            if(!reservations.isEmpty()) {
+                for (Reservation r : reservations)
+                    reservationRepo.delete(r);
+            }
+            Set<Rating> ratings = place.getRatings();
+            if(!ratings.isEmpty())
+                for (Rating r: ratings)
+                    ratingRepo.delete(r);
+
             owner.setPlace(null);
             userRepo.save(owner);
 
