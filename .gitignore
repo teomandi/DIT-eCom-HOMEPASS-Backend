@@ -27,6 +27,8 @@ target/
 /.nb-gradle/
 build/
 
+bnb_db.mv.db
+
 ### VS Code ###
 .vscode/
 
